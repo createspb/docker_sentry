@@ -1,0 +1,33 @@
+#!/bin/bash
+
+exec >> /var/log/start_postgres.sh.log 2>&1
+set -x
+
+# Stop on error
+set -e
+
+DATA_DIR=/data
+
+if [[ ! -e /data/is_bootstrapped ]]; then
+  source /home/first_run.sh
+else
+  source /home/normal_run.sh
+fi
+
+
+wait_for_postgres_and_run_post_start_action() {
+  # Wait for postgres to finish starting up first.
+  while [[ ! -e /run/postgresql/9.3-main.pid ]] ; do
+      inotifywait -q -e create /run/postgresql/ >> /dev/null
+  done
+
+  post_start_action
+}
+
+pre_start_action
+
+wait_for_postgres_and_run_post_start_action &
+
+# Start PostgreSQL
+echo "Starting PostgreSQL..."
+exec /sbin/setuser postgres /usr/lib/postgresql/9.3/bin/postgres -D /etc/postgresql/9.3/main -c config_file=/etc/postgresql/9.3/main/postgresql.conf
