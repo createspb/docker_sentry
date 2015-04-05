@@ -1,8 +1,15 @@
+import os
+from decouple import config
 from sentry.conf.server import *
 
-# SENTRY_URL_PREFIX = 'http://sentry.mpn.lc'
+# better set these
+SENTRY_URL_PREFIX = config('SENTRY_URL_PREFIX', default=None)
+SENTRY_ADMIN_EMAIL = config('SENTRY_ADMIN_EMAIL', default=None)
+SENTRY_KEY = config('SENTRY_KEY')
 
-SENTRY_ALLOW_REGISTRATION = False
+
+SENTRY_ALLOW_REGISTRATION = config('SENTRY_ALLOW_REGISTRATION ', default=False, cast=bool)
+
 # Set this to false to require authentication
 SENTRY_PUBLIC = False
 SENTRY_ALLOW_PUBLIC_PROJECTS = False
@@ -10,16 +17,15 @@ SENTRY_ALLOW_PUBLIC_PROJECTS = False
 DATABASES = {
     'default': {
         'ENGINE':   'django.db.backends.postgresql_psycopg2',
-        'NAME':     'sentry',
-        'USER':     'sentry',
-        'PASSWORD': 'sentry',
-        'HOST':     '127.0.0.1',
-        'PORT':     '5432'
+        'NAME':     os.environ.get('POSTGRESQL_NAME'),
+        'USER':     os.environ.get('POSTGRESQL_USER'),
+        'PASSWORD': os.environ.get('POSTGRESQL_PASS'),
+        'HOST':     os.environ.get('DB_PORT_5432_TCP_ADDR'),
+        'PORT':     os.environ.get('DB_PORT_5432_TCP_PORT')
     }
 }
 
-SENTRY_KEY = '123dkdslyvBUGWq5bcnW9d1MZQ82qmPZB4pskKS3555fdBfuhySw=='
-
+SENTRY_CACHE = 'sentry.cache.django.DjangoCache'
 
 
 # You should configure the absolute URI to Sentry.
@@ -37,9 +43,6 @@ ALLOWED_HOSTS = '*'
 SENTRY_ALLOWED_HOSTS = '*'
 
 # Mail server configuration
-
-# For more information check Django's documentation:
-#  https://docs.djangoproject.com/en/1.3/topics/email/#e-mail-backends
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

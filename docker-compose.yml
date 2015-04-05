@@ -1,0 +1,24 @@
+sentrydb:
+  image: createdigitalspb/postgresql-9.3:1.0
+  env_file:
+   - ./private/sentrydb.env
+  volumes_from:
+   - sentrydbdata
+
+sentrydbdata:
+ image: busybox
+ volumes:
+ - /data
+
+
+sentry:
+  build: .
+  ports:
+   - "49900:9000"
+  links:
+   - sentrydb:db
+  volumes:
+   - ./src:/project/src
+  env_file:
+   - ./private/sentrydb.env
+   - ./private/sentry.env
