@@ -4,3 +4,7 @@
 # private files
 private/*
 !private/README
+
+.installed.cfg
+bin/*
+eggs/*

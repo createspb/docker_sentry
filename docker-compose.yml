@@ -1,5 +1,5 @@
 sentrydb:
-  image: createdigitalspb/postgresql-9.3:1.0
+  image: createdigitalspb/postgresql94:1.3
   env_file:
    - ./private/sentrydb.env
   volumes_from:
@@ -12,7 +12,7 @@ sentrydbdata:
 
 
 sentry:
-  build: .
+  image: createdigitalspb/sentry:1.0
   ports:
    - "49900:9000"
   links:
