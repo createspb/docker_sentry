@@ -44,13 +44,16 @@ SENTRY_ALLOWED_HOSTS = '*'
 
 # Mail server configuration
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+AWS_SES_REGION_NAME = 'eu-west-1'
+AWS_SES_REGION_ENDPOINT = 'email.eu-west-1.amazonaws.com'
 
-EMAIL_HOST = 'localhost'
-EMAIL_HOST_PASSWORD = ''
-EMAIL_HOST_USER = ''
-EMAIL_PORT = 25
-EMAIL_USE_TLS = False
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
+EMAIL_BACKEND = 'django_ses.SESBackend'
+SERVER_EMAIL = config('SERVER_EMAIL', default=None)
+DEFAULT_FROM_EMAIL = config('SERVER_EMAIL', default=None)
+
 
 # http://twitter.com/apps/new
 # It's important that input a callback URL, even if its useless.
@@ -63,8 +66,8 @@ FACEBOOK_APP_ID = ''
 FACEBOOK_API_SECRET = ''
 
 # http://code.google.com/apis/accounts/docs/OAuth2.html#Registering
-GOOGLE_OAUTH2_CLIENT_ID = ''
-GOOGLE_OAUTH2_CLIENT_SECRET = ''
+GOOGLE_OAUTH2_CLIENT_ID = os.environ.get('GOOGLE_OAUTH2_CLIENT_ID', '')
+GOOGLE_OAUTH2_CLIENT_SECRET = os.environ.get('GOOGLE_OAUTH2_CLIENT_SECRET', '')
 
 # https://github.com/settings/applications/new
 GITHUB_APP_ID = ''
@@ -108,7 +111,7 @@ LOGGING = {
     },
     'loggers': {
         'sentry': {
-            'level': 'ERROR',
+            'level': 'WARNING',
             'handlers': ['file', 'console', 'sentry'],
             'propagate': True,
         },
@@ -116,7 +119,7 @@ LOGGING = {
             'formatter': 'client_info',
         },
         'sentry.errors': {
-            'level': 'ERROR',
+            'level': 'WARNING',
             'handlers': ['file', 'console'],
             'propagate': True,
         },

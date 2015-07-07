@@ -12,13 +12,11 @@ sentrydbdata:
 
 
 sentry:
-  build: .
+  image: createdigitalspb/sentry:1.1
   ports:
    - "49900:9000"
   links:
    - sentrydb:db
-  volumes:
-   - ./src:/project/src
   env_file:
    - ./private/sentrydb.env
    - ./private/sentry.env

@@ -1,3 +1,4 @@
-sentry==7.5.0
+sentry==7.6.0
 python-decouple==2.3
 sentry-slack==0.2.0
+-e git+https://github.com/createspb/django-ses.git#egg=django-ses-0.7.0f
