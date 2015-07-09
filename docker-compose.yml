@@ -10,6 +10,11 @@ sentrydbdata:
  volumes:
  - /data
 
+redis:
+  image: createdigitalspb/redis3:1.0-1-ga19d314
+  expose:
+    - "6379"
+
 
 sentry:
   build: .
@@ -17,6 +22,7 @@ sentry:
    - "49900:9000"
   links:
    - sentrydb:db
+   - redis:redis
   volumes:
    - ./src:/project/src
   env_file:
